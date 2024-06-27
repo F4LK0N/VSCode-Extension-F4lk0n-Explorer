@@ -205,7 +205,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TemplateExplorerProvider = void 0;
+exports.FileItem = exports.TemplateExplorerProvider = void 0;
 const vscode = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(3));
 const fs = __importStar(__webpack_require__(4));
@@ -242,17 +242,17 @@ class TemplateExplorerProvider {
         if (!this.workspaceRoot) {
             return Promise.resolve([]);
         }
-        const elementPath = element ? element.resourceUri.fsPath : this.getRootPath;
+        const elementPath = element ? element.resourceUri.fsPath : this.getRootPath();
         //return Promise.resolve(this.getItems(itemPath));
         if (!this.pathExists(elementPath)) {
-            return [];
+            return Promise.resolve([]);
         }
         const elementItems = fs.readdirSync(elementPath);
-        return elementItems.map(itemName => {
+        return Promise.resolve(elementItems.map(itemName => {
             const itemPath = path.join(elementPath, itemName);
             const isDirectory = fs.statSync(itemPath).isDirectory();
             return new FileItem(vscode.Uri.file(itemPath), isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
-        });
+        }));
     }
     //private getItems(path: string): FileItem[] {
     //    if (!this.pathExists(path)) {
@@ -345,27 +345,29 @@ class TemplateExplorerProvider {
         //}
     }
     async getFilePath(uri, defaultName) {
-        //const itemName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
-        //return itemName ? path.join(uri.fsPath, itemName) : undefined;
+        const itemName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
+        return itemName ? path.join(uri.fsPath, itemName) : undefined;
     }
     async getTemplatePath(uri, defaultName) {
-        //const folderName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
-        //    return folderName ? path.join(uri, folderName) : undefined;
+        const folderName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
+        return folderName ? path.join(uri, folderName) : undefined;
     }
 }
 exports.TemplateExplorerProvider = TemplateExplorerProvider;
 class FileItem extends vscode.TreeItem {
     resourceUri;
-    iconPath;
     collapsibleState;
-    constructor(resourceUri, iconPath, collapsibleState) {
+    constructor(resourceUri, collapsibleState) {
         super(resourceUri, collapsibleState);
         this.resourceUri = resourceUri;
-        this.iconPath = iconPath;
         this.collapsibleState = collapsibleState;
-        this.contextValue = "template";
+        //this.tooltip = `${this.resourceUri.fsPath}`;
+        //this.description = this.resourceUri.fsPath;
     }
+    iconPath = path.join(__filename, '..', '..', 'resources/fs', 'file.svg');
+    contextValue = 'file';
 }
+exports.FileItem = FileItem;
 
 
 /***/ })
