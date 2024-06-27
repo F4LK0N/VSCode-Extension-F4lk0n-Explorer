@@ -5,26 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-          "name": "Launch Extension 2",
-          "type": "extensionHost",
-          "args": [
-            "--extensionDevelopmentPath=${workspaceFolder}"
-          ],
-          "outFiles": [
-            "${workspaceFolder}/out/**/*.js"
-          ],
-          "preLaunchTask": "build",
-          "request": "launch",
-        },
-        {
+            "name": "Launch Extension",
             "type": "extensionHost",
             "request": "launch",
-            "name": "Launch Extension",
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}",
-                "--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
-                "--disable-extensions"
+                "--enable-proposed-api",
+                "f4lk0n-corp.f4lk0n-explorer"
             ],
             "outFiles": [
                 "${workspaceFolder}/out/**/*.js"
@@ -33,12 +21,13 @@
         },
         {
             "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${file}"
+            "request": "attach",
+            "name": "Attach to Extension Host",
+            "port": 5870,
+            "restart": true,
+            "outFiles": [
+                "${workspaceRoot}/out"
+            ]
         }
     ]
 }
