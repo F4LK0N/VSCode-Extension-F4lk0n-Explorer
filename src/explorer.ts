@@ -61,8 +61,8 @@ export class FileItem extends vscode.TreeItem {
     }
 
     iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'document.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'document.svg')
+        light: path.join(__filename, '..', '..', 'resources/fs', 'file.svg'),
+        dark: path.join(__filename, '..', '..', 'resources/fs', 'file.svg')
     };
 
     contextValue = 'file';
