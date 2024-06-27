@@ -51,6 +51,7 @@ function activate(context) {
     //Refresh
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.refresh', () => templateExplorerProvider.refresh()));
     //Commands
+    context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateRoot', () => templateExplorerProvider.templateRoot()));
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateCreate', () => templateExplorerProvider.templateCreate()));
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateRename', (node) => templateExplorerProvider.templateRename(node)));
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateDelete', (node) => templateExplorerProvider.templateDelete(node)));
@@ -217,7 +218,7 @@ class TemplateExplorerProvider {
     rootPath;
     constructor(workspaceRoot) {
         this.workspaceRoot = workspaceRoot;
-        this.rootFolder = "#TEMPLATES";
+        this.rootFolder = path.join(".fkn", "#TEMPLATES");
         this.rootPath = path.join(this.workspaceRoot, this.rootFolder);
     }
     refresh() {
@@ -243,16 +244,30 @@ class TemplateExplorerProvider {
             return Promise.resolve([]);
         }
         const elementPath = element ? element.resourceUri.fsPath : this.getRootPath();
-        //return Promise.resolve(this.getItems(itemPath));
         if (!this.pathExists(elementPath)) {
             return Promise.resolve([]);
         }
-        const elementItems = fs.readdirSync(elementPath);
+        let elementItems = fs.readdirSync(elementPath);
+        elementItems = this.sortItems(elementPath, elementItems);
         return Promise.resolve(elementItems.map(itemName => {
             const itemPath = path.join(elementPath, itemName);
-            const isDirectory = fs.statSync(itemPath).isDirectory();
-            return new FileItem(vscode.Uri.file(itemPath), isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
+            //Folder
+            if (fs.statSync(itemPath).isDirectory()) {
+                return new FileItem(vscode.Uri.file(itemPath), vscode.TreeItemCollapsibleState.Collapsed);
+            }
+            //File
+            return new FileItem(vscode.Uri.file(itemPath), vscode.TreeItemCollapsibleState.None);
         }));
+    }
+    sortItems(parentPath, itemsArray) {
+        const directories = itemsArray.filter(item => {
+            const itemPath = path.join(parentPath, item);
+            return fs.statSync(itemPath).isDirectory();
+        });
+        const files = itemsArray.filter(item => !directories.includes(item));
+        directories.sort();
+        files.sort();
+        return [...directories, ...files];
     }
     //private getItems(path: string): FileItem[] {
     //    if (!this.pathExists(path)) {
@@ -281,7 +296,18 @@ class TemplateExplorerProvider {
     //            dark: darkIconPath
     //        }, isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
     //    }
+    async templateRoot() {
+        return this.templateCreate();
+    }
     async templateCreate() {
+        const name = await this.getInput("Template");
+        if (!name) {
+            return;
+        }
+        fs.mkdirSync(path.join(this.getRootPath(), name), {
+            recursive: true
+        });
+        this.refresh();
         //t rootPath = await this.getTemplatePath(this.getRootPath, 'New Template');
         //fs.mkdirSync(rootPath);
         //
@@ -348,9 +374,9 @@ class TemplateExplorerProvider {
         const itemName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
         return itemName ? path.join(uri.fsPath, itemName) : undefined;
     }
-    async getTemplatePath(uri, defaultName) {
-        const folderName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
-        return folderName ? path.join(uri, folderName) : undefined;
+    async getInput(defaultValue = "") {
+        const name = await vscode.window.showInputBox({ prompt: "Name: ", value: defaultValue });
+        return name;
     }
 }
 exports.TemplateExplorerProvider = TemplateExplorerProvider;

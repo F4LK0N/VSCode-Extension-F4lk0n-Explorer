@@ -27,6 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
     //Refresh
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.refresh', () => templateExplorerProvider.refresh()));
     //Commands
+    context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateRoot', () => templateExplorerProvider.templateRoot()));
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateCreate', () => templateExplorerProvider.templateCreate()));
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateRename', (node) => templateExplorerProvider.templateRename(node)));
     context.subscriptions.push(vscode.commands.registerCommand('fkn-view-explorer-templates.templateDelete', (node) => templateExplorerProvider.templateDelete(node)));

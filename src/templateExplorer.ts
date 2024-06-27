@@ -12,7 +12,7 @@ export class TemplateExplorerProvider implements vscode.TreeDataProvider<FileIte
     
     constructor(workspaceRoot: string) {
         this.workspaceRoot = workspaceRoot;
-        this.rootFolder = "#TEMPLATES";
+        this.rootFolder = path.join(".fkn", "#TEMPLATES");
         this.rootPath = path.join(this.workspaceRoot, this.rootFolder);
     }
 
@@ -41,24 +41,46 @@ export class TemplateExplorerProvider implements vscode.TreeDataProvider<FileIte
         if (!this.workspaceRoot) {
             return Promise.resolve([]);
         }
+        
         const elementPath = element ? element.resourceUri.fsPath : this.getRootPath();
-        
-        //return Promise.resolve(this.getItems(itemPath));
-        
         if (!this.pathExists(elementPath)) {
             return Promise.resolve([]);
         }
         
-        const elementItems = fs.readdirSync(elementPath);
+        let elementItems = fs.readdirSync(elementPath);
+        elementItems = this.sortItems(elementPath, elementItems);
+        
         return Promise.resolve(elementItems.map(itemName => {
             const itemPath = path.join(elementPath, itemName);
-            const isDirectory = fs.statSync(itemPath).isDirectory();
             
+            //Folder
+            if(fs.statSync(itemPath).isDirectory()){
+                return new FileItem(
+                    vscode.Uri.file(itemPath),
+                    vscode.TreeItemCollapsibleState.Collapsed
+                );
+            }
+            
+            //File
             return new FileItem(
-                vscode.Uri.file(itemPath), 
-                isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None
+                vscode.Uri.file(itemPath),
+                vscode.TreeItemCollapsibleState.None
             );
         }));
+    }
+    
+    private sortItems(parentPath: string, itemsArray: string[]): string[] {
+        const directories = itemsArray.filter(item => {
+            const itemPath = path.join(parentPath, item);
+            return fs.statSync(itemPath).isDirectory();
+        });
+    
+        const files = itemsArray.filter(item => !directories.includes(item));
+    
+        directories.sort();
+        files.sort();
+    
+        return [...directories, ...files];
     }
     
     //private getItems(path: string): FileItem[] {
@@ -90,7 +112,24 @@ export class TemplateExplorerProvider implements vscode.TreeDataProvider<FileIte
 //        }, isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
 //    }
 
+    async templateRoot(): Promise<void> {
+        return this.templateCreate();
+    }
+    
     async templateCreate(): Promise<void> {
+        
+        const name = await this.getInput("Template");
+        if(!name){
+            return;
+        }
+        
+        fs.mkdirSync(
+            path.join(this.getRootPath(), name),
+            {
+                recursive: true
+            }
+        );
+        this.refresh();
         
         //t rootPath = await this.getTemplatePath(this.getRootPath, 'New Template');
         //fs.mkdirSync(rootPath);
@@ -168,9 +207,9 @@ export class TemplateExplorerProvider implements vscode.TreeDataProvider<FileIte
         return itemName ? path.join(uri.fsPath, itemName) : undefined;
     }
 
-    private async getTemplatePath(uri: string, defaultName: string): Promise<string | undefined> {
-        const folderName = await vscode.window.showInputBox({ prompt: `Enter ${defaultName} name`, value: defaultName });
-        return folderName ? path.join(uri, folderName) : undefined;
+    private async getInput(defaultValue: string = ""): Promise<string | undefined> {
+        const name = await vscode.window.showInputBox({ prompt: "Name: ", value: defaultValue });
+        return name;
     }
 }
 

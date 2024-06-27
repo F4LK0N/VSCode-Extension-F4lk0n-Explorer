@@ -48,7 +48,7 @@
         "viewsWelcome": [
             {
                 "view": "fkn-view-explorer-templates",
-                "contents": "No templates root folder.\n[Create root folder](command:fkn-view-explorer-templates.createRoot)"
+                "contents": "No templates root folder.\n[Create root folder](command:fkn-view-explorer-templates.templateRoot)"
             }
         ],
         "commands": [
@@ -58,6 +58,13 @@
                 "shortTitle": "Fkn",
                 "icon": "resources/explorer/template-create.svg",
                 "command": "fkn-view-explorer.extensionF4lk0nProject"
+            },
+            {
+                "category": "Explorer Templates",
+                "title": "Root [Template]",
+                "shortTitle": "[+T]",
+                "icon": "resources/explorer/template-create.svg",
+                "command": "fkn-view-explorer-templates.templateRoot"
             },
             {
                 "category": "Explorer Templates",
