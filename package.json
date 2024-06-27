@@ -1,7 +1,7 @@
 {
-    "name": "f4lk0n-explorer",
-    "displayName": "F4lk0n Explorer",
-    "description": "Enhanced file explorer for Visual Studio Code",
+    "name": "f4lk0n",
+    "displayName": "F4lk0n",
+    "description": "F4lk0n for Visual Studio Code",
     "version": "0.1.0",
     "author": "F4lk0n",
     "publisher": "falkon-corp",
@@ -19,113 +19,139 @@
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "fkn-container-explorer",
-                    "title": "F4lk0n Explorer",
-                    "icon": "resources/sidebar/f4lk0n.svg"
+                    "id": "fkn-container",
+                    "title": "F4lk0n",
+                    "icon": "resources/containers/f4lk0n.svg"
                 }
             ]
         },
         "views": {
-            "fkn-container-explorer": [
+            "fkn-container": [
                 {
                     "id": "fkn-view-explorer",
-                    "name": "F4lk0n"
+                    "name": "Explorer",
+                    "contextualTitle": "Explorer",
+                    "type": "tree",
+                    "icon": "resources/containers/explorer.svg",
+                    "visibility": "visible"
                 },
                 {
-                    "id": "fkn-view-templates",
-                    "name": "Templates"
+                    "id": "fkn-view-explorer-templates",
+                    "name": "Explorer Templates",
+                    "contextualTitle": "Explorer Templates",
+                    "type": "tree",
+                    "icon": "resources/containers/explorer-templates.svg",
+                    "visibility": "visible"
                 }
             ]
         },
+        "viewsWelcome": [
+            {
+                "view": "fkn-view-explorer-templates",
+                "contents": "No templates root folder.\n[Create root folder](command:fkn-view-explorer-templates.createRoot)"
+            }
+        ],
         "commands": [
             {
-                "command": "fkn-view-templates.templateCreate",
-                "title": "Create Template",
-                "icon": {
-                    "light": "resources/templates/template-create.svg",
-                    "dark": "resources/templates/template-create.svg"
-                }
+                "category": "Explorer Extension",
+                "title": "F4lk0n Project",
+                "shortTitle": "Fkn",
+                "icon": "resources/explorer/template-create.svg",
+                "command": "fkn-view-explorer.extensionF4lk0nProject"
             },
             {
-                "command": "fkn-view-templates.templateRename",
-                "title": "Rename Template"
+                "category": "Explorer Templates",
+                "title": "New [Template]",
+                "shortTitle": "[+T]",
+                "icon": "resources/explorer/template-create.svg",
+                "command": "fkn-view-explorer-templates.templateCreate"
             },
             {
-                "command": "fkn-view-templates.templateDelete",
-                "title": "Delete Template",
-                "icon": {
-                    "light": "resources/templates/template-create.svg",
-                    "dark": "resources/templates/template-create.svg"
-                }
+                "category": "Explorer Templates",
+                "title": "Rename [Template]",
+                "shortTitle": "[#T]",
+                "icon": "resources/explorer/template-rename.svg",
+                "command": "fkn-view-explorer-templates.templateRename"
             },
             {
-                "command": "fkn-view-templates.createFolder",
-                "title": "Create Folder"
+                "category": "Explorer Templates",
+                "title": "Delete [Template]",
+                "shortTitle": "[-T]",
+                "icon": "resources/explorer/template-delete.svg",
+                "command": "fkn-view-explorer-templates.templateDelete"
             },
             {
-                "command": "fkn-view-templates.createFile",
-                "title": "Create File"
+                "category": "Explorer Templates Items",
+                "title": "New [Directory]",
+                "shortTitle": "[+D]",
+                "icon": "resources/explorer/create-folder.svg",
+                "command": "fkn-view-explorer-templates.createFolder"
             },
             {
-                "command": "fkn-view-templates.rename",
-                "title": "Rename"
+                "category": "Explorer Templates Items",
+                "title": "New [File]",
+                "shortTitle": "[+F]",
+                "icon": "resources/explorer/create-file.svg",
+                "command": "fkn-view-explorer-templates.createFile"
             },
             {
-                "command": "fkn-view-templates.delete",
-                "title": "Delete"
+                "category": "Explorer Templates Items",
+                "title": "Rename",
+                "shortTitle": "[#]",
+                "icon": "resources/explorer/rename.svg",
+                "command": "fkn-view-explorer-templates.rename"
+            },
+            {
+                "category": "Explorer Templates Items",
+                "title": "Delete",
+                "shortTitle": "[-]",
+                "icon": "resources/explorer/delete.svg",
+                "command": "fkn-view-explorer-templates.delete"
             }
         ],
         "menus": {
+            "explorer/context": [
+                {
+                    "command": "fkn-view-explorer.extensionF4lk0nProject",
+                    "group": "2_fkn-view-explorer-templates"
+                }
+            ],
             "view/title": [
                 {
-                    "command": "fkn-view-templates.templateCreate",
-                    "when": "view == fkn-view-templates"
+                    "command": "fkn-view-explorer-templates.templateCreate",
+                    "when": "view == fkn-view-explorer-templates"
                 },
                 {
-                    "command": "fkn-view-templates.templateCreate",
-                    "when": "view == fkn-view-templates",
+                    "command": "fkn-view-explorer-templates.templateCreate",
+                    "when": "view == fkn-view-explorer-templates",
                     "group": "navigation"
                 }
             ],
             "view/item/context": [
                 {
-                    "command": "fkn-view-templates.createFolder",
-                    "when": "view == fkn-view-templates"
+                    "command": "fkn-view-explorer-templates.createFolder",
+                    "when": "view == fkn-view-explorer-templates"
                 },
                 {
-                    "command": "fkn-view-templates.createFolder",
-                    "when": "view == fkn-view-templates && viewItem == template",
+                    "command": "fkn-view-explorer-templates.createFolder",
+                    "when": "view == fkn-view-explorer-templates && viewItem == template",
                     "group": "inline@1"
                 },
                 {
-                    "command": "fkn-view-templates.createFile",
-                    "when": "view == fkn-view-templates",
+                    "command": "fkn-view-explorer-templates.createFile",
+                    "when": "view == fkn-view-explorer-templates",
                     "group": "inline"
                 },
                 
                 {
-                    "command": "fkn-view-templates.delete",
-                    "when": "view == fkn-view-templates",
+                    "command": "fkn-view-explorer-templates.delete",
+                    "when": "view == fkn-view-explorer-templates",
                     "group": "inline"
                 },
                 {
-                    "command": "fkn-view-templates.rename",
-                    "when": "view == fkn-view-templates",
+                    "command": "fkn-view-explorer-templates.rename",
+                    "when": "view == fkn-view-explorer-templates",
                     "group": "inline"
-                }
-            ],
-            "explorer/context": [
-                {
-                    "command": "fkn-view-templates.templateCreate",
-                    "group": "2_fkn-view-templates"
-                },
-                {
-                    "command": "fkn-view-templates.templateRename",
-                    "group": "2_fkn-view-templates"
-                },
-                {
-                    "command": "fkn-view-templates.templateDelete",
-                    "group": "2_fkn-view-templates"
                 }
             ]
         }
