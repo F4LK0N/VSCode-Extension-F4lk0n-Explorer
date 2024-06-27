@@ -31,26 +31,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.activate = activate;
 const vscode = __importStar(__webpack_require__(1));
+const explorer_1 = __webpack_require__(2);
 function activate(context) {
     console.log('Congratulations, your extension "f4lk0n-explorer" is now active!');
+    const workspaceRoot = vscode.workspace.rootPath;
+    if (!workspaceRoot) {
+        vscode.window.showInformationMessage('No workspace folder open');
+        return;
+    }
     // Register tree view
-    vscode.window.registerTreeDataProvider('f4lk0n-explorer-view', new F4lk0nExplorerProvider());
+    const fileExplorerProvider = new explorer_1.FileExplorerProvider(workspaceRoot);
+    vscode.window.registerTreeDataProvider('f4lk0n-explorer-view', fileExplorerProvider);
     // Register command to refresh tree view
-    vscode.commands.registerCommand('f4lk0n-explorer-view.refresh', () => {
-        vscode.window.createTreeView('f4lk0n-explorer-view', { treeDataProvider: new F4lk0nExplorerProvider() });
-    });
-}
-class F4lk0nExplorerProvider {
-    getTreeItem(element) {
-        return element;
-    }
-    getChildren(element) {
-        if (!element) {
-            // Display workspace folders as root elements
-            return vscode.workspace.workspaceFolders?.map(folder => new vscode.TreeItem(folder.uri.fsPath, vscode.TreeItemCollapsibleState.Collapsed));
-        }
-        return [];
-    }
+    context.subscriptions.push(vscode.commands.registerCommand('f4lk0n-explorer-view.refresh', () => fileExplorerProvider.refresh()));
 }
 
 
@@ -59,6 +52,115 @@ class F4lk0nExplorerProvider {
 /***/ ((module) => {
 
 module.exports = require("vscode");
+
+/***/ }),
+/* 2 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FileItem = exports.FileExplorerProvider = void 0;
+const vscode = __importStar(__webpack_require__(1));
+const path = __importStar(__webpack_require__(3));
+const fs = __importStar(__webpack_require__(4));
+class FileExplorerProvider {
+    workspaceRoot;
+    _onDidChangeTreeData = new vscode.EventEmitter();
+    onDidChangeTreeData = this._onDidChangeTreeData.event;
+    constructor(workspaceRoot) {
+        this.workspaceRoot = workspaceRoot;
+    }
+    getTreeItem(element) {
+        return element;
+    }
+    getChildren(element) {
+        if (!this.workspaceRoot) {
+            vscode.window.showInformationMessage('No workspace folder open');
+            return Promise.resolve([]);
+        }
+        const dirPath = element ? element.resourceUri.fsPath : this.workspaceRoot;
+        return Promise.resolve(this.getFiles(dirPath));
+    }
+    getFiles(dirPath) {
+        if (this.pathExists(dirPath)) {
+            const dirFiles = fs.readdirSync(dirPath);
+            return dirFiles.map(fileName => {
+                const filePath = path.join(dirPath, fileName);
+                const isDirectory = fs.statSync(filePath).isDirectory();
+                return new FileItem(vscode.Uri.file(filePath), isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
+            });
+        }
+        else {
+            return [];
+        }
+    }
+    pathExists(p) {
+        try {
+            fs.accessSync(p);
+            return true;
+        }
+        catch (err) {
+            return false;
+        }
+    }
+    refresh() {
+        this._onDidChangeTreeData.fire();
+    }
+}
+exports.FileExplorerProvider = FileExplorerProvider;
+class FileItem extends vscode.TreeItem {
+    resourceUri;
+    collapsibleState;
+    constructor(resourceUri, collapsibleState) {
+        super(resourceUri, collapsibleState);
+        this.resourceUri = resourceUri;
+        this.collapsibleState = collapsibleState;
+        this.tooltip = `${this.resourceUri.fsPath}`;
+        this.description = this.resourceUri.fsPath;
+    }
+    iconPath = {
+        light: path.join(__filename, '..', '..', 'resources', 'light', 'document.svg'),
+        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'document.svg')
+    };
+    contextValue = 'file';
+}
+exports.FileItem = FileItem;
+
+
+/***/ }),
+/* 3 */
+/***/ ((module) => {
+
+module.exports = require("path");
+
+/***/ }),
+/* 4 */
+/***/ ((module) => {
+
+module.exports = require("fs");
 
 /***/ })
 /******/ 	]);
