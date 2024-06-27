@@ -40,7 +40,11 @@
         "commands": [
             {
                 "command": "fkn-view-templates.templateCreate",
-                "title": "Create Template"
+                "title": "Create Template",
+                "icon": {
+                    "light": "resources/templates/template-create.svg",
+                    "dark": "resources/templates/template-create.svg"
+                }
             },
             {
                 "command": "fkn-view-templates.templateRename",
@@ -48,7 +52,11 @@
             },
             {
                 "command": "fkn-view-templates.templateDelete",
-                "title": "Delete Template"
+                "title": "Delete Template",
+                "icon": {
+                    "light": "resources/templates/template-create.svg",
+                    "dark": "resources/templates/template-create.svg"
+                }
             },
             {
                 "command": "fkn-view-templates.createFolder",
@@ -68,26 +76,41 @@
             }
         ],
         "menus": {
+            "view/title": [
+                {
+                    "command": "fkn-view-templates.templateCreate",
+                    "when": "view == fkn-view-templates"
+                },
+                {
+                    "command": "fkn-view-templates.templateCreate",
+                    "when": "view == fkn-view-templates",
+                    "group": "navigation"
+                }
+            ],
             "view/item/context": [
                 {
                     "command": "fkn-view-templates.createFolder",
-                    "when": "view == fkn-view-templates-view",
-                    "group": "inline"
+                    "when": "view == fkn-view-templates"
+                },
+                {
+                    "command": "fkn-view-templates.createFolder",
+                    "when": "view == fkn-view-templates && viewItem == template",
+                    "group": "inline@1"
                 },
                 {
                     "command": "fkn-view-templates.createFile",
-                    "when": "view == fkn-view-templates-view",
+                    "when": "view == fkn-view-templates",
                     "group": "inline"
                 },
                 
                 {
                     "command": "fkn-view-templates.delete",
-                    "when": "view == fkn-view-templates-view",
+                    "when": "view == fkn-view-templates",
                     "group": "inline"
                 },
                 {
                     "command": "fkn-view-templates.rename",
-                    "when": "view == fkn-view-templates-view",
+                    "when": "view == fkn-view-templates",
                     "group": "inline"
                 }
             ],

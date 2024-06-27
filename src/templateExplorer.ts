@@ -16,13 +16,13 @@ export class TemplateExplorerProvider implements vscode.TreeDataProvider<FileIte
         this._onDidChangeTreeData.fire();
     }
 
-    getTreeItem(element: FileItem): vscode.TreeItem {
-        return element;
-    }
-
     getChildren(element?: FileItem): Thenable<FileItem[]> {
         const dir = element ? element.resourceUri.fsPath : this.templatesRoot;
         return Promise.resolve(this.getFiles(dir));
+    }
+    
+    getTreeItem(element: FileItem): vscode.TreeItem {
+        return element;
     }
 
     private getFiles(dir: string): FileItem[] {
@@ -46,7 +46,13 @@ export class TemplateExplorerProvider implements vscode.TreeDataProvider<FileIte
     }
 
     async templateCreate(): Promise<void> {
-        const folderPath = await this.getTemplatePath(this.templatesRoot, 'New Template');
+        
+        const pathRoot = await this.getTemplatePath(this.templatesRoot, 'New Template');
+        fs.mkdirSync(folderPath);
+        
+        const newName = await vscode.window.showInputBox({ prompt: 'Enter the new name', value: path.basename(node.resourceUri.fsPath) });
+        
+        
         if (folderPath) {
             fs.mkdirSync(folderPath);
             this.refresh();
@@ -125,5 +131,6 @@ class FileItem extends vscode.TreeItem {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
         super(resourceUri, collapsibleState);
+        this.contextValue = "template";
     }
 }

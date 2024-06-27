@@ -220,12 +220,12 @@ class TemplateExplorerProvider {
     refresh() {
         this._onDidChangeTreeData.fire();
     }
-    getTreeItem(element) {
-        return element;
-    }
     getChildren(element) {
         const dir = element ? element.resourceUri.fsPath : this.templatesRoot;
         return Promise.resolve(this.getFiles(dir));
+    }
+    getTreeItem(element) {
+        return element;
     }
     getFiles(dir) {
         if (!fs.existsSync(dir)) {
@@ -245,7 +245,9 @@ class TemplateExplorerProvider {
         }, isDirectory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
     }
     async templateCreate() {
-        const folderPath = await this.getTemplatePath(this.templatesRoot, 'New Template');
+        const pathRoot = await this.getTemplatePath(this.templatesRoot, 'New Template');
+        fs.mkdirSync(folderPath);
+        const newName = await vscode.window.showInputBox({ prompt: 'Enter the new name', value: path.basename(node.resourceUri.fsPath) });
         if (folderPath) {
             fs.mkdirSync(folderPath);
             this.refresh();
@@ -318,6 +320,7 @@ class FileItem extends vscode.TreeItem {
         this.resourceUri = resourceUri;
         this.iconPath = iconPath;
         this.collapsibleState = collapsibleState;
+        this.contextValue = "template";
     }
 }
 
