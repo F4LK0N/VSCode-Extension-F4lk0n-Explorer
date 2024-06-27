@@ -1,18 +1,6 @@
 import * as vscode from 'vscode';
 
-export function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "f4lk0n-explorer" is now active!');
-
-    // Register tree view
-    vscode.window.registerTreeDataProvider('f4lk0n-explorer', new CustomExplorerProvider());
-
-    // Register command to refresh tree view
-    vscode.commands.registerCommand('f4lk0n-explorer.refresh', () => {
-        vscode.window.createTreeView('f4lk0n-explorer', { treeDataProvider: new CustomExplorerProvider() });
-    });
-}
-
-class CustomExplorerProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+class F4lk0nExplorerProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
@@ -24,4 +12,16 @@ class CustomExplorerProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         }
         return [];
     }
+}
+
+export function activate(context: vscode.ExtensionContext) {
+    console.log('Congratulations, your extension "f4lk0n-explorer" is now active!');
+
+    // Register tree view
+    vscode.window.registerTreeDataProvider('f4lk0n-explorer', new F4lk0nExplorerProvider());
+
+    // Register command to refresh tree view
+    vscode.commands.registerCommand('f4lk0n-explorer.refresh', () => {
+        vscode.window.createTreeView('f4lk0n-explorer', { treeDataProvider: new F4lk0nExplorerProvider() });
+    });
 }
