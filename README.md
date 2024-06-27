@@ -13,7 +13,9 @@ This project aims to create a extension for the VSCode IDE with a enhanced File 
 Project Start:
 ```shell
 npm init -y
+npm install -g typescript
 npm install typescript --save-dev
+npm install --save-dev @types/vscode
 ```
 
 

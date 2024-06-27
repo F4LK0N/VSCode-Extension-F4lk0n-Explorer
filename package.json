@@ -7,6 +7,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/vscode": "^1.90.0",
     "typescript": "^5.5.2"
   },
   "scripts": {
