@@ -19,26 +19,93 @@
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "f4lk0n-explorer-container",
+                    "id": "fkn-container-explorer",
                     "title": "F4lk0n Explorer",
-                    "icon": "resources/sidebar/explorer.svg"
+                    "icon": "resources/sidebar/f4lk0n.svg"
                 }
             ]
         },
         "views": {
-            "f4lk0n-explorer-container": [
+            "fkn-container-explorer": [
                 {
-                    "id": "f4lk0n-explorer-view",
-                    "name": "F4lk0n Explorer"
+                    "id": "fkn-view-explorer",
+                    "name": "F4lk0n"
+                },
+                {
+                    "id": "fkn-view-templates",
+                    "name": "Templates"
                 }
             ]
         },
         "commands": [
             {
-                "command": "f4lk0n-explorer.cmd1",
-                "title": "Command 1"
+                "command": "fkn-view-templates.templateCreate",
+                "title": "Create Template"
+            },
+            {
+                "command": "fkn-view-templates.templateRename",
+                "title": "Rename Template"
+            },
+            {
+                "command": "fkn-view-templates.templateDelete",
+                "title": "Delete Template"
+            },
+            {
+                "command": "fkn-view-templates.createFolder",
+                "title": "Create Folder"
+            },
+            {
+                "command": "fkn-view-templates.createFile",
+                "title": "Create File"
+            },
+            {
+                "command": "fkn-view-templates.rename",
+                "title": "Rename"
+            },
+            {
+                "command": "fkn-view-templates.delete",
+                "title": "Delete"
             }
-        ]
+        ],
+        "menus": {
+            "view/item/context": [
+                {
+                    "command": "fkn-view-templates.createFolder",
+                    "when": "view == fkn-view-templates-view",
+                    "group": "inline"
+                },
+                {
+                    "command": "fkn-view-templates.createFile",
+                    "when": "view == fkn-view-templates-view",
+                    "group": "inline"
+                },
+                
+                {
+                    "command": "fkn-view-templates.delete",
+                    "when": "view == fkn-view-templates-view",
+                    "group": "inline"
+                },
+                {
+                    "command": "fkn-view-templates.rename",
+                    "when": "view == fkn-view-templates-view",
+                    "group": "inline"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "command": "fkn-view-templates.templateCreate",
+                    "group": "2_fkn-view-templates"
+                },
+                {
+                    "command": "fkn-view-templates.templateRename",
+                    "group": "2_fkn-view-templates"
+                },
+                {
+                    "command": "fkn-view-templates.templateDelete",
+                    "group": "2_fkn-view-templates"
+                }
+            ]
+        }
     },
     "devDependencies": {
         "@types/vscode": "^1.90.0",
