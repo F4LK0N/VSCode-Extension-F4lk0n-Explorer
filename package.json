@@ -1,19 +1,68 @@
 {
-  "name": "f4lk0n-explorer",
-  "version": "1.0.0",
-  "description": "This project aims to create a extension for the VSCode IDE with a enhanced File System Explorer.",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.5.2",
-    "@types/vscode": "^1.90.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc",
-    "build": "tsc",
-    "watch": "tsc -w"
-  }
+    "name": "f4lk0n-explorer",
+    "displayName": "F4lk0n Explorer",
+    "description": "Enhanced file explorer for Visual Studio Code",
+    "version": "0.1.0",
+    "author": "F4lk0n",
+    "publisher": "falkon-corp",
+    "keywords": [],
+    "license": "ISC",
+    "engines": {
+      "vscode": "^1.80.1"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "f4lk0n-explorer-container",
+                    "title": "F4lk0n Explorer",
+                    "icon": "media/dep.svg"
+                }
+            ]
+        },
+        "views": {
+            "f4lk0n-explorer-container": [
+                {
+                    "id": "f4lk0n-explorer-view",
+                    "name": "F4lk0n Explorer"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "f4lk0n-explorer.cmd1",
+                "title": "Command 1"
+            }
+        ]
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.90.0",
+        "@types/mocha": "^10.0.6",
+        "@types/node": "20.x",
+        "@typescript-eslint/eslint-plugin": "^7.11.0",
+        "@typescript-eslint/parser": "^7.11.0",
+        "eslint": "^8.57.0",
+        "typescript": "^5.4.5",
+        "ts-loader": "^9.5.1",
+        "webpack": "^5.92.0",
+        "webpack-cli": "^5.1.4",
+        "@vscode/test-cli": "^0.0.9",
+        "@vscode/test-electron": "^2.4.0"
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "webpack",
+        "watch": "webpack --watch",
+        "package": "webpack --mode production --devtool hidden-source-map",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "vscode-test"
+    }
 }

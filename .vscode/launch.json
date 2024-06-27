@@ -5,29 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Extension",
+            "name": "Run Extension",
             "type": "extensionHost",
             "request": "launch",
-            "runtimeExecutable": "${execPath}",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}",
-                "--enable-proposed-api",
-                "f4lk0n-corp.f4lk0n-explorer"
+                "--extensionDevelopmentPath=${workspaceFolder}"
             ],
             "outFiles": [
-                "${workspaceFolder}/out/**/*.js"
+                "${workspaceFolder}/out/*.js"
             ],
-            "preLaunchTask": "watch"
-        },
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach to Extension Host",
-            "port": 5870,
-            "restart": true,
-            "outFiles": [
-                "${workspaceRoot}/out"
-            ]
+            "preLaunchTask": "${defaultBuildTask}"
         }
     ]
 }
