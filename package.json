@@ -7,11 +7,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/vscode": "^1.90.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "@types/vscode": "^1.90.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc"
+    "compile": "tsc",
+    "watch": "tsc -w"
   }
 }
