@@ -1,0 +1,30 @@
+{
+    "name": "f4lk0n-explorer",
+    "displayName": "F4lk0n Explorer",
+    "description": "Enhanced file explorer for Visual Studio Code",
+    "version": "0.1.0",
+    "publisher": "f4lk0n-corp",
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onView:f4lk0n-explorer"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "views": {
+            "explorer": [
+                {
+                    "id": "f4lk0n-explorer",
+                    "name": "F4lk0n Explorer"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "compile": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^4.0.0"
+    }
+}

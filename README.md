@@ -12,7 +12,8 @@ This project aims to create a extension for the VSCode IDE with a enhanced File 
 ## Development
 Project Start:
 ```shell
-npm install -g yo generator-code
+npm init -y
+npm install typescript --save-dev
 ```
 
 
@@ -24,6 +25,3 @@ https://code.visualstudio.com/
 Node.js  
 https://nodejs.org/en  
 
-Yeoman  
-https://yeoman.io/  
-https://yeoman.io/generators/  
