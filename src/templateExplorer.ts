@@ -234,15 +234,18 @@ export class FileItem extends vscode.TreeItem {
         }
         else{
             //Template
-            if(this.resourceUri.fsPath.endsWith("#TEMPLATES")) {
+            if(this.resourceUri.fsPath.match(/(\.fkn)(\/|\\)(\#TEMPLATES)(\/|\\)[^\/\\]+/)){
                 this.contextValue = 'template';
-                this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'template.svg')
+                this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'template.svg');
             }
-            
             //Folder
             else{
                 this.contextValue = 'folder';
-                this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'folder.svg')
+                if(collapsibleState == vscode.TreeItemCollapsibleState.Collapsed){
+                    this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'folder.svg');
+                }else{
+                    this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'folder-open.svg');
+                }
             }
         }
     }
