@@ -50,20 +50,28 @@ export class FileExplorerProvider implements vscode.TreeDataProvider<FileItem> {
 }
 
 export class FileItem extends vscode.TreeItem {
+    
+    iconPath = path.join(__filename, '..', '..', 'resources/fs', 'file.svg')
+    contextValue = 'file';
+    
     constructor(
         public readonly resourceUri: vscode.Uri,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
         super(resourceUri, collapsibleState);
-
-        this.tooltip = `${this.resourceUri.fsPath}`;
-        this.description = this.resourceUri.fsPath;
+        
+        //this.tooltip = `${this.resourceUri.fsPath}`;
+        //this.description = this.resourceUri.fsPath;
+        
+        //File
+        if(collapsibleState == vscode.TreeItemCollapsibleState.None){
+            this.contextValue = 'file';
+            this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'file.svg')
+        }
+        //Folder
+        else{
+            this.contextValue = 'folder';
+            this.iconPath = path.join(__filename, '..', '..', 'resources', 'fs', 'folder.svg')
+        }
     }
-
-    iconPath = {
-        light: path.join(__filename, '..', '..', 'resources/fs', 'file.svg'),
-        dark: path.join(__filename, '..', '..', 'resources/fs', 'file.svg')
-    };
-
-    contextValue = 'file';
 }
