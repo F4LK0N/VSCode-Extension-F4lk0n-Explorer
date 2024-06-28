@@ -8,13 +8,26 @@
             "name": "Run Extension",
             "type": "extensionHost",
             "request": "launch",
+            "runtimeExecutable": "${execPath}",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
+                "--extensionDevelopmentPath=${workspaceRoot}",
+                "--enable-proposed-api",
+                "falkon-corp.f4lk0n"
             ],
             "outFiles": [
-                "${workspaceFolder}/out/*.js"
+                "${workspaceRoot}/out/*.js"
             ],
             "preLaunchTask": "${defaultBuildTask}"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Extension Host",
+            "port": 5870,
+            "restart": true,
+            "outFiles": [
+                "${workspaceRoot}/out"
+            ]
         }
     ]
 }
